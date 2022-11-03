@@ -55,7 +55,16 @@ public class Tree<T extends Comparable<T>> {
         }
     }
 
-    public void remove(T data) throws NoSuchElementException {
+    public void remove(T data){
+        if (this.firmed){
+            unfirm();
+            removeImp(data);
+            firmWare();
+        }else
+            removeImp(data);
+    }
+
+    private void removeImp(T data) throws NoSuchElementException {
         Node<T> curr = head.getLeft();
         boolean notRemoved = true;
         while (notRemoved) {
@@ -115,11 +124,21 @@ public class Tree<T extends Comparable<T>> {
         Node<T> left = curr.getLeft();
         Node<T> right = curr.getRight();
         if (parent.getLeft().getData().compareTo(curr.getData()) == 0) {
-            curr.setData(right.getData());
-            curr.setRight(null);
+            parent.setLeft(right);
+            right.setParent(parent);
+            while (right.getLeft() != null){
+                right = right.getLeft();
+            }
+            right.setLeft(left);
+            left.setParent(right);
         } else {
-            curr.setData(left.getData());
-            curr.setLeft(null);
+            parent.setRight(left);
+            left.setParent(parent);
+            while (left.getRight() != null){
+                left = left.getRight();
+            }
+            left.setRight(right);
+            right.setParent(left);
         }
     }
 
@@ -195,7 +214,7 @@ class Node<T> {
     private Node<T> parent;
     private Node<T> left;
     private Node<T> right;
-    private T data;
+    private final T data;
 
     Node(T data) {
         this.data = data;
@@ -225,10 +244,6 @@ class Node<T> {
 
     public void setRight(Node<T> right) {
         this.right = right;
-    }
-
-    public void setData(T data) {
-        this.data = data;
     }
 
     public T getData() {

@@ -47,13 +47,7 @@ public class User {
         }catch (NumberFormatException e){
             throw new InputFormatException();
         }
-        if (!tree.firmed) {
-            tree.remove(data);
-        }else {
-            tree.unfirm();
-            tree.remove(data);
-            tree.firmWare();
-        }
+        tree.remove(data);
     }
 
     public void firm(){
